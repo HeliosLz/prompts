@@ -171,6 +171,19 @@ memory_guidance_line = str(
         "- Guidance: When a request involves knowledge retention, structural checks, version migration, or complex task decomposition, prefer invoking the `pensieve` skill.",
     )
 )
+instructions_cfg = schema.get("instructions") if isinstance(schema.get("instructions"), dict) else {}
+instruction_start_marker = str(instructions_cfg.get("start_marker", "<!-- pensieve:instructions:start -->"))
+instruction_end_marker = str(instructions_cfg.get("end_marker", "<!-- pensieve:instructions:end -->"))
+instruction_required_files = [
+    str(item)
+    for item in instructions_cfg.get("required_files", ["CLAUDE.md", "AGENTS.md"])
+    if isinstance(item, str) and item
+]
+instruction_required_fragments = [
+    str(item)
+    for item in instructions_cfg.get("required_fragments", [])
+    if isinstance(item, str) and item
+]
 
 
 def add_finding(
@@ -250,6 +263,21 @@ def extract_pensieve_memory_block(text: str) -> str:
     if not m:
         return text
     return m.group(0)
+
+
+def extract_marker_block(text: str, start_marker: str, end_marker: str):
+    start_count = text.count(start_marker)
+    end_count = text.count(end_marker)
+    if start_count == 0 and end_count == 0:
+        return None, "missing"
+    if start_count != 1 or end_count != 1:
+        return None, "malformed"
+    start_idx = text.find(start_marker)
+    end_idx = text.find(end_marker)
+    if end_idx < start_idx:
+        return None, "malformed"
+    end_idx += len(end_marker)
+    return text[start_idx:end_idx], None
 
 
 if not root.exists():
@@ -364,6 +392,42 @@ else:
                 "Run init/migrate/doctor to trigger auto memory alignment, ensuring MEMORY.md matches the SKILL.md description and includes the pensieve skill guidance.",
             )
 
+# Project instruction files must expose the short Pensieve routing block.
+# This is the system-prompt entry point for agents that do not load the skill
+# before reading repository instructions.
+if root.exists():
+    for instruction_file in instruction_required_files:
+        target = project_root / instruction_file
+        if not target.is_file():
+            add_finding(
+                "STR-701", "MUST_FIX", "missing_instruction_file", target,
+                "Project instruction file is missing the Pensieve short routing block.",
+                "Run sync-instructions to create/update CLAUDE.md and AGENTS.md with the Pensieve How To Use block.",
+            )
+            continue
+
+        block, block_error = extract_marker_block(
+            read_text_normalized(target),
+            instruction_start_marker,
+            instruction_end_marker,
+        )
+        if block_error is not None:
+            add_finding(
+                "STR-702", "MUST_FIX", "instruction_block_malformed", target,
+                "Project instruction file is missing or has a malformed Pensieve routing marker block.",
+                "Run sync-instructions to insert a valid Pensieve How To Use block. If markers are duplicated or unpaired, fix them manually first.",
+            )
+            continue
+
+        assert block is not None
+        missing_fragments = [fragment for fragment in instruction_required_fragments if fragment not in block]
+        if missing_fragments:
+            add_finding(
+                "STR-703", "MUST_FIX", "instruction_content_drift", target,
+                "Project instruction file Pensieve routing block is missing required short-route content.",
+                "Run sync-instructions to refresh the Pensieve How To Use block from current pipeline routes.",
+            )
+
 # Check for inline graph in state.md (should be a reference pointer, not full content).
 if state_file.is_file():
     state_text = read_text_normalized(state_file)
@@ -393,6 +457,9 @@ flags = {
     "has_missing_memory_file": any(f.finding_id == "STR-501" for f in findings),
     "has_memory_content_drift": any(f.finding_id == "STR-502" for f in findings),
     "has_state_inline_graph": any(f.finding_id == "STR-601" for f in findings),
+    "has_missing_instruction_file": any(f.finding_id == "STR-701" for f in findings),
+    "has_instruction_block_malformed": any(f.finding_id == "STR-702" for f in findings),
+    "has_instruction_content_drift": any(f.finding_id == "STR-703" for f in findings),
 }
 
 report = {

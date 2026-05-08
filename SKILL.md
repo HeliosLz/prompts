@@ -1,12 +1,13 @@
 ---
 name: pensieve
 description: >-
-  Project knowledge base and workflow router.
-  knowledge/ caches previously explored file locations, module boundaries, and call chains for direct reuse;
-  decisions/maxims are established architectural decisions and coding standards -- follow, don't re-debate;
-  pipelines are reusable workflows; short-term/ holds new conclusions temporarily, promoted or deleted upon expiry.
-  Use self-improve to capture new insights after completing tasks.
-  Provides five tools: init, upgrade, migrate, doctor, self-improve.
+  Project knowledge base and workflow router. knowledge/ caches explored file
+  locations, module boundaries, and call chains for reuse; decisions/maxims are
+  established architecture decisions and coding standards to follow, not
+  relitigate; pipelines are reusable workflows; short-term/ stages new
+  conclusions until promotion or deletion. Use self-improve after completing
+  work to capture new insights. Provides seven tools: init, upgrade, migrate,
+  doctor, self-improve, refine, and sync-instructions.
 ---
 
 # Pensieve
@@ -14,12 +15,13 @@ description: >-
 Route user requests to the correct tool. When in doubt, confirm first.
 
 ## Routing
-- Init: Initialize the current project's user data directory and populate seed files. Tool spec: `.src/tools/init.md`.
+- Init: Initialize the current project user-data directory and seed files. Tool spec: `.src/tools/init.md`.
 - Upgrade: Refresh Pensieve skill source code in the global git clone. Tool spec: `.src/tools/upgrade.md`.
-- Migrate: Structural migration and legacy cleanup. Tool spec: `.src/tools/migrate.md`.
-- Doctor: Read-only scan of the current project's user data directory. Tool spec: `.src/tools/doctor.md`.
-- Self-Improve: Extract reusable conclusions and write to user data. Tool spec: `.src/tools/self-improve.md`.
-- Refine: Refine the knowledge base (triage five-question review + compress abstraction). Tool spec: `.src/tools/refine.md`.
+- Migrate: Run structural migration and legacy cleanup. Tool spec: `.src/tools/migrate.md`.
+- Doctor: Read-only scan of the current project user-data directory. Tool spec: `.src/tools/doctor.md`.
+- Self-Improve: Extract reusable conclusions and write them into user data. Tool spec: `.src/tools/self-improve.md`.
+- Refine: Refine the knowledge base with triage review and compression. Tool spec: `.src/tools/refine.md`.
+- Sync Instructions: Write existing pipeline short routes into `CLAUDE.md` / `AGENTS.md`. Tool spec: `.src/tools/sync-instructions.md`.
 - Graph View: Read `<project-root>/.pensieve/.state/pensieve-user-data-graph.md`.
 
 ## Project Data

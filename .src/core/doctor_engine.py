@@ -61,23 +61,27 @@ def _yes_no(v: object) -> str:
     return "yes" if bool(v) else "no"
 
 
-def _next_step(must_fix: list[Finding], schema: dict[str, Any]) -> tuple[str, bool, bool]:
+def _next_step(must_fix: list[Finding], schema: dict[str, Any]) -> tuple[str, bool, bool, bool]:
     doctor_cfg = schema.get("doctor") if isinstance(schema.get("doctor"), dict) else {}
     next_cfg = doctor_cfg.get("next_step") if isinstance(doctor_cfg.get("next_step"), dict) else {}
     migrate_categories = {str(x) for x in next_cfg.get("migrate_categories", [])}
+    sync_instruction_categories = {str(x) for x in next_cfg.get("sync_instructions_categories", [])}
     upgrade_categories = {str(x) for x in next_cfg.get("upgrade_categories", [])}
 
     has_migrate = any(f.category in migrate_categories for f in must_fix)
+    has_sync_instructions = any(f.category in sync_instruction_categories for f in must_fix)
     has_upgrade = any(f.category in upgrade_categories for f in must_fix)
 
     if must_fix:
         if has_migrate:
-            return "migrate", has_migrate, has_upgrade
+            return "migrate", has_migrate, has_upgrade, has_sync_instructions
+        if has_sync_instructions:
+            return "sync-instructions", has_migrate, has_upgrade, has_sync_instructions
         if has_upgrade:
-            return "upgrade", has_migrate, has_upgrade
-        return "self-improve", has_migrate, has_upgrade
+            return "upgrade", has_migrate, has_upgrade, has_sync_instructions
+        return "self-improve", has_migrate, has_upgrade, has_sync_instructions
 
-    return "none", has_migrate, has_upgrade
+    return "none", has_migrate, has_upgrade, has_sync_instructions
 
 
 def _build_report(
@@ -97,6 +101,7 @@ def _build_report(
     flags: dict[str, Any],
     has_migrate_must_fix: bool,
     has_upgrade_must_fix: bool,
+    has_sync_instructions_must_fix: bool,
 ) -> str:
     if graph_stats["unresolved"] == 0:
         graph_observation = "All graph links resolved."
@@ -154,8 +159,11 @@ def _build_report(
     lines.append(
         f"- MEMORY.md missing/drifted: {_yes_no(flags.get('has_missing_memory_file') or flags.get('has_memory_content_drift'))}"
     )
+    lines.append(
+        f"- Instruction files missing/drifted: {_yes_no(flags.get('has_missing_instruction_file') or flags.get('has_instruction_block_malformed') or flags.get('has_instruction_content_drift'))}"
+    )
     lines.append(f"- state.md inline graph: {_yes_no(flags.get('has_state_inline_graph'))}")
-    lines.append(f"- Suggested action: `{next_step if next_step in {'migrate', 'upgrade', 'self-improve'} else 'none'}`")
+    lines.append(f"- Suggested action: `{next_step if next_step in {'migrate', 'upgrade', 'sync-instructions', 'self-improve'} else 'none'}`")
     lines.append("")
     lines.append("## 5) Action Plan")
     if must_fix and has_migrate_must_fix:
@@ -166,8 +174,12 @@ def _build_report(
         lines.append("1. Run `upgrade` to update skill source code.")
         lines.append("2. Re-run `doctor` to confirm MUST_FIX count is zero.")
         lines.append("3. If structure migration issues appear later, run `migrate`.")
+    elif must_fix and has_sync_instructions_must_fix:
+        lines.append("1. Run `sync-instructions` to write the Pensieve short routing block into CLAUDE.md and AGENTS.md.")
+        lines.append("2. Re-run `doctor` to confirm MUST_FIX count is zero.")
+        lines.append("3. If marker pairs are malformed, fix duplicate/unpaired markers manually first.")
     elif must_fix:
-        lines.append("1. Fix MUST_FIX items per report (frontmatter/broken links/MEMORY). No need to run `migrate` first.")
+        lines.append("1. Fix MUST_FIX items per report (frontmatter/broken links/MEMORY/instructions). No need to run `migrate` first.")
         lines.append("2. Re-run `doctor` to confirm MUST_FIX count is zero.")
         lines.append("3. If migration issues appear later (deprecated paths/file drift), run `migrate`.")
     elif should_fix or info:
@@ -330,7 +342,7 @@ def run(argv: list[str]) -> int:
     should_fix = [f for f in findings if f.severity == "SHOULD_FIX"]
     info = [f for f in findings if f.severity == "INFO"]
 
-    next_step, has_migrate_must_fix, has_upgrade_must_fix = _next_step(must_fix, schema)
+    next_step, has_migrate_must_fix, has_upgrade_must_fix, has_sync_instructions_must_fix = _next_step(must_fix, schema)
 
     if must_fix:
         status = "FAIL"
@@ -359,6 +371,7 @@ def run(argv: list[str]) -> int:
         flags=flags,
         has_migrate_must_fix=has_migrate_must_fix,
         has_upgrade_must_fix=has_upgrade_must_fix,
+        has_sync_instructions_must_fix=has_sync_instructions_must_fix,
     )
     report_file.write_text(report_text, encoding="utf-8")
 

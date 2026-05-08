@@ -2,8 +2,6 @@
 
 ## v2.0.0 — User-Level System + Project-Level Data
 
-> Architecture spec: `docs/architecture-v2.md`
-
 ### Motivation
 
 In v1, each project `git clone`d a full copy of the system code into `<project>/.claude/skills/pensieve/`. User data was physically mixed with system code, updates required per-project `git pull`, and installation required dual-track skill clone + plugin operations. v2 solves these problems.
@@ -20,15 +18,14 @@ In v1, each project `git clone`d a full copy of the system code into `<project>/
 
 ### Added
 
-- **`SKILL.md`** (repo root): static skill interface declaration, tracked by git, updated via `git pull`
-- **`install-hooks.sh`**: writes hook configuration to `~/.claude/settings.json`, one-time install with global effect
+- **`SKILL.md`** (repository root): static skill interface declaration, tracked by git and updated by `git pull`
+- **`install-hooks.sh`**: writes hook configuration to `~/.claude/settings.json`; one global install applies everywhere
 - **`maintain-project-state.sh`**: maintains `<project>/.pensieve/state.md` (lifecycle state + knowledge graph)
-- **`validate_project_root()`** (`lib.sh`): rejects `$HOME`, `/`, `/tmp`, and the skill root itself as project root
-- **`resolve_output_path()`** (`lib.sh`): unified output path resolution (absolute/relative + defaults)
-- **`project_state_file()`** / **`skill_md_file()`** (`lib.sh`): v2 path accessor functions
-- **`normalize_critical_file_content()`** / **`load_skill_description()`** (`pensieve_core.py`): shared implementation, eliminating code duplication across scan-structure / run-migrate / maintain-auto-memory
-- **`classify_state()`** (`pensieve_core.py`): project data lifecycle state machine (EMPTY -> SEEDED -> ALIGNED / DRIFTED)
-- **`architecture-v2.md`** (`docs/`): complete architecture specification document
+- **`validate_project_root()`** (`lib.sh`): rejects `$HOME`, `/`, `/tmp`, and the skill root itself as project roots
+- **`resolve_output_path()`** (`lib.sh`): centralizes output path resolution (absolute/relative + default value)
+- **`project_state_file()`** / **`skill_md_file()`** (`lib.sh`): v2 path accessors
+- **`normalize_critical_file_content()`** / **`load_skill_description()`** (`pensieve_core.py`): shared implementation that removes duplication across scan-structure / run-migrate / maintain-auto-memory
+- **`classify_state()`** (`pensieve_core.py`): project-data lifecycle state machine (EMPTY -> SEEDED -> ALIGNED / DRIFTED)
 
 ### Changed
 

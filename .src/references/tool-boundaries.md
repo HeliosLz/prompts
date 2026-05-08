@@ -2,21 +2,23 @@
 
 | Tool | Responsible for | Not responsible for |
 |---|---|---|
-| `init` | Initialize the project `.pensieve/` directory, seed default content, produce first-round exploration input | Does not write business conclusions directly |
-| `upgrade` | Refresh global skill source code (`~/.claude/skills/pensieve/`) | Does not perform structural migration; does not produce PASS/FAIL |
-| `migrate` | Migrate data from older versions, align directory structure, align key files | Does not update versions; does not produce PASS/FAIL |
-| `doctor` | Structural and format health check, output a fixed report | Does not modify business code |
-| `self-improve` | Create new entries in `short-term/`, edit existing files in place | Does not replace init/migrate/doctor |
-| `refine` | Refine the knowledge base: triage via five-question review + compress to abstract | New entries produced by compress go through short-term |
+| `init` | Initialize the project `.pensieve/` directory, seed default content, and produce first-round exploration input | Does not write business conclusions directly |
+| `upgrade` | Refresh the global skill source (`~/.claude/skills/pensieve/`) | Does not migrate structure or emit PASS/FAIL |
+| `migrate` | Migrate legacy data, align directory structure, and align critical files | Does not update versions or emit PASS/FAIL |
+| `doctor` | Run structural and format health checks, then emit a fixed report | Does not modify business code |
+| `self-improve` | Create new entries under `short-term/` and update existing files in place | Does not replace init/migrate/doctor |
+| `refine` | Refine the knowledge base through triage review and compression | New entries produced by compression go through short-term |
+| `sync-instructions` | Write existing pipeline short routes into `CLAUDE.md` / `AGENTS.md` | Does not generate project summaries, inline full pipelines, or replace `.pensieve/` |
 
 ## Common redirects
 
 | User request | Correct tool |
 |---|---|
-| "How to install/reinstall Pensieve" | Read `.src/references/skill-lifecycle.md` first, then run `init` |
+| "How do I install/reinstall Pensieve?" | Read `.src/references/skill-lifecycle.md` first, then run `init` |
 | "Upgrade Pensieve" | `upgrade` |
-| "How to update Pensieve" | Read `.src/references/skill-lifecycle.md` first, then run `upgrade` |
-| "Migrate to v2 / clean up old paths" | `migrate` |
-| "Check if data has issues" | `doctor` |
-| "Capture this experience as knowledge" | `self-improve` |
-| "Organize / deduplicate / compress / refine knowledge" | `refine` |
+| "How do I update Pensieve?" | Read `.src/references/skill-lifecycle.md` first, then run `upgrade` |
+| "Migrate to v2 / clean legacy paths" | `migrate` |
+| "Check whether the data has issues" | `doctor` |
+| "Capture this experience" | `self-improve` |
+| "Organize/deduplicate/compress/refine knowledge" | `refine` |
+| "Write pipelines into CLAUDE.md/AGENTS.md" | `sync-instructions` |

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pensieve Sync to Main"
+  short_description: "Sync Pensieve zh changes to English main"
+  default_prompt: "Use $pensieve-sync-to-main to sync Pensieve zh changes into the English main branch."

@@ -71,9 +71,8 @@ _CONTEXT_LINK_LINE_RE = re.compile(
 
 _PIPELINE_BASENAMES = frozenset({
     "run-when-reviewing-code.md",
-    "pipeline.run-when-reviewing-code.md",
     "run-when-committing.md",
-    "pipeline.run-when-committing.md",
+    "run-when-refactoring.md",
 })
 
 

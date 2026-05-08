@@ -15,6 +15,8 @@ description: Initialize the current project's .pensieve/ user data directory and
 
 If the user first asks "how to install/reinstall Pensieve", read `.src/references/skill-lifecycle.md` first, then run this tool.
 
+Default pipeline seeds come from `.src/templates/pipelines/run-when-*.md`; do not scan `pipeline.*` files from the `.src/templates/` root.
+
 ## Failure fallback
 
 - `.src/scripts/init-project-data.sh` missing: stop and report skill installation is incomplete
