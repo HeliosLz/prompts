@@ -11,3 +11,7 @@ __pycache__/
 # Development artifacts
 /.src/.gitignore
 /agents/.gitignore
+
+# opensrc - source code for packages
+opensrc/
+AGENTS.md

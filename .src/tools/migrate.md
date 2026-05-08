@@ -12,6 +12,8 @@ description: 迁移工具。将旧版本用户数据自动迁移到 v2 目录结
 - doctor 报告关键文件缺失或 critical file drift
 - 需要补齐目录结构或重新对齐种子文件
 
+关键 pipeline 种子以 `.src/templates/pipelines/run-when-*.md` 为准；迁移脚本只在读取旧用户数据时兼容 `pipeline.run-when-*` 历史文件名。
+
 ## 标准执行
 
 > All `.src/` paths below are relative to the skill root (`$PENSIEVE_SKILL_ROOT`, typically `~/.claude/skills/pensieve/`).

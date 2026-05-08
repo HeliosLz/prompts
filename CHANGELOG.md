@@ -2,8 +2,6 @@
 
 ## v2.0.0 — 用户级系统 + 项目级数据
 
-> 架构规格：`docs/architecture-v2.md`
-
 ### 动机
 
 v1 中每个项目 `git clone` 一份完整的系统代码到 `<project>/.claude/skills/pensieve/`，用户数据与系统代码物理混合，更新需逐项目 `git pull`，安装需 skill clone + plugin 双轨操作。v2 解决这些问题。
@@ -28,7 +26,6 @@ v1 中每个项目 `git clone` 一份完整的系统代码到 `<project>/.claude
 - **`project_state_file()`** / **`skill_md_file()`**（`lib.sh`）：v2 路径访问函数
 - **`normalize_critical_file_content()`** / **`load_skill_description()`**（`pensieve_core.py`）：共享实现，消除 scan-structure / run-migrate / maintain-auto-memory 间的代码重复
 - **`classify_state()`**（`pensieve_core.py`）：项目数据生命周期状态机（EMPTY → SEEDED → ALIGNED / DRIFTED）
-- **`architecture-v2.md`**（`docs/`）：完整的架构规格文档
 
 ### 变更
 

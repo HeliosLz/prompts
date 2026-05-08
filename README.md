@@ -93,7 +93,7 @@ Pensieve 最初以一段 Linus Torvalds 风格的引导词为人所知——用"
 | 类型 | 内置内容 | 效果 |
 |---|---|---|
 | maxim | 4 条 Linus 风格工程准则 | agent 不写补丁式代码，先简化再扩展，不破坏已有行为 |
-| pipeline | 提交审查 + 代码审查 | 每次提交和审查自动对照准则，结论回流为 knowledge |
+| pipeline | 提交 + 代码审查 + 重构 | 每次提交、审查和重构自动对照准则，结论回流为 knowledge |
 | knowledge | 代码品味审查标准 | 什么是"好代码"有了可执行的定义 |
 
 试试：`"用 pensieve review 最近提交的代码品味如何"` 或 `"用 pensieve commit 本地修改"`。
@@ -260,9 +260,19 @@ bash <skill-path>/.src/scripts/run-doctor.sh --strict
 │   ├── core/
 │   ├── scripts/
 │   ├── templates/
+│   │   ├── agents/
+│   │   ├── knowledge/
+│   │   ├── maxims/
+│   │   └── pipelines/
 │   ├── references/
 │   └── tools/
-└── agents/                         #   代理配置
+└── agents/                         #   agent/UI metadata
+
+<project>/.codex/skills/            # 项目级 Codex skill（只服务本仓库维护）
+└── pensieve-sync-to-main/
+    ├── SKILL.md
+    └── agents/
+        └── openai.yaml
 
 <project>/.pensieve/                # 项目级（每项目独立，可纳入版本控制）
 ├── maxims/                         #   工程准则

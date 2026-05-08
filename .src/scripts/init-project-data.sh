@@ -75,16 +75,19 @@ if [[ -d "$SYSTEM_KNOWLEDGE_ROOT" ]]; then
 fi
 
 PIPELINE_SEEDED_COUNT=0
-for template_pipeline in "$TEMPLATES_ROOT"/pipeline.run-when-*.md; do
-  [[ -f "$template_pipeline" ]] || continue
-  is_readme_file "$template_pipeline" && continue
-  pipeline_name="$(basename "$template_pipeline" | sed 's/^pipeline\.//')"
-  target_pipeline="$DATA_ROOT/pipelines/$pipeline_name"
-  if [[ ! -f "$target_pipeline" ]]; then
-    cp "$template_pipeline" "$target_pipeline"
-    ((PIPELINE_SEEDED_COUNT++)) || true
-  fi
-done
+TEMPLATE_PIPELINES_DIR="$TEMPLATES_ROOT/pipelines"
+if [[ -d "$TEMPLATE_PIPELINES_DIR" ]]; then
+  for template_pipeline in "$TEMPLATE_PIPELINES_DIR"/run-when-*.md; do
+    [[ -f "$template_pipeline" ]] || continue
+    is_readme_file "$template_pipeline" && continue
+    pipeline_name="$(basename "$template_pipeline")"
+    target_pipeline="$DATA_ROOT/pipelines/$pipeline_name"
+    if [[ ! -f "$target_pipeline" ]]; then
+      cp "$template_pipeline" "$target_pipeline"
+      ((PIPELINE_SEEDED_COUNT++)) || true
+    fi
+  done
+fi
 
 # Seed custom agents for detected clients.
 # Only seed when the client's config directory already exists in the project.
