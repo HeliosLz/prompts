@@ -1,5 +1,5 @@
 ---
-description: Read-only scan of the current project's .pensieve/ user data directory. Checks frontmatter, links, directory structure, critical seed files, and auto-memory alignment, then outputs a fixed-format report.
+description: Read-only scan of the current project's .pensieve/ user-data directory. Checks frontmatter, links, directory structure, critical seed files, auto memory, and Pensieve short-route alignment in project instruction files, then emits a fixed-format report.
 ---
 
 # Doctor Tool
@@ -8,10 +8,10 @@ description: Read-only scan of the current project's .pensieve/ user data direct
 
 ## Use when
 
-- Post-initialization verification
-- Post-upgrade verification
-- Confirming MUST_FIX count is zero after migration
-- Suspected drift in graph, frontmatter, directory structure, or memory pointers
+- Rechecking after init
+- Rechecking after upgrade
+- Confirming MUST_FIX is cleared after migration
+- Suspected drift in the graph, frontmatter, directory structure, memory guidance, or `CLAUDE.md` / `AGENTS.md` short routes
 
 ## Standard execution
 
@@ -27,4 +27,6 @@ Doctor only maintains:
 - Runtime graph output such as `.pensieve/.state/pensieve-user-data-graph.md`
 - Claude auto memory `~/.claude/projects/<project>/memory/MEMORY.md`
 
-It will not modify your business code.
+Doctor reports missing or drifted `CLAUDE.md` / `AGENTS.md` Pensieve short routes as MUST_FIX, but it does not modify them automatically. Use `sync-instructions` to fix them.
+
+It does not modify business code.

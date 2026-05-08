@@ -19,8 +19,8 @@ If the problem is mainly "scattered knowledge" or "unclear boundaries," write a 
 └── run-when-*.md
 ```
 
-During initialization or migration, the system seeds default pipelines from `.src/templates/`.
-Afterwards, files in `pipelines/` are real user-side data.
+During initialization or migration, the system seeds default pipelines from `.src/templates/pipelines/`.
+After that, files under `pipelines/` are the user's real data.
 
 ## Mandatory rules
 

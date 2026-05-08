@@ -92,9 +92,9 @@ That engineering philosophy is still at the core of Pensieve, but it's no longer
 
 | Type | Built-in Content | Effect |
 |---|---|---|
-| maxim | 4 Linus-style engineering principles | Agent doesn't write patch-style code; simplify before extending; don't break existing behavior |
-| pipeline | Commit review + code review | Each commit and review automatically cross-references principles; conclusions flow back as knowledge |
-| knowledge | Code taste review criteria | "What is good code" now has an executable definition |
+| maxim | 4 Linus-style engineering principles | Agent avoids patchy code, simplifies before extending, and preserves existing behavior |
+| pipeline | Commit + code review + refactor | Every commit, review, and refactor checks against the standards and feeds conclusions back into knowledge |
+| knowledge | Code-taste review standard | "Good code" becomes executable |
 
 Try it: `"Use pensieve to review the code taste of recent commits"` or `"Use pensieve to commit local changes"`.
 
@@ -260,9 +260,19 @@ bash <skill-path>/.src/scripts/run-doctor.sh --strict
 │   ├── core/
 │   ├── scripts/
 │   ├── templates/
+│   │   ├── agents/
+│   │   ├── knowledge/
+│   │   ├── maxims/
+│   │   └── pipelines/
 │   ├── references/
 │   └── tools/
-└── agents/                         #   Agent configurations
+└── agents/                         #   agent/UI metadata
+
+<project>/.codex/skills/            # Project-level Codex skill (only for maintaining this repository)
+└── pensieve-sync-to-main/
+    ├── SKILL.md
+    └── agents/
+        └── openai.yaml
 
 <project>/.pensieve/                # Project-level (per-project, can be version-controlled)
 ├── maxims/                         #   Engineering principles
