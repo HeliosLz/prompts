@@ -6,7 +6,7 @@ description: >-
   decisions/maxims 是已确立的架构决策和编码标准，遵循而非重新讨论；
   pipelines 是可复用工作流；short-term/ 暂存新结论，到期后 promote 或删除。
   完成任务后使用 self-improve 捕获新洞察。
-  提供 init、upgrade、migrate、doctor、self-improve 五个工具。
+  提供 init、upgrade、migrate、doctor、self-improve、refine、sync-instructions 七个工具。
 ---
 
 # Pensieve
@@ -20,6 +20,7 @@ description: >-
 - Doctor: 只读扫描当前项目用户数据目录。工具规格：`.src/tools/doctor.md`。
 - Self-Improve: 提取可复用结论并写入用户数据。工具规格：`.src/tools/self-improve.md`。
 - Refine: 精炼知识库（triage 五问审阅 + compress 压缩抽象）。工具规格：`.src/tools/refine.md`。
+- Sync Instructions: 将现有 pipeline 短路由写入 `CLAUDE.md` / `AGENTS.md`。工具规格：`.src/tools/sync-instructions.md`。
 - Graph View: 读取 `<project-root>/.pensieve/.state/pensieve-user-data-graph.md`。
 
 ## Project Data

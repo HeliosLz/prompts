@@ -8,6 +8,7 @@
 | `doctor` | 结构与格式体检，输出固定报告 | 不改业务代码 |
 | `self-improve` | 新建条目写入 `short-term/`，修改已有文件原地修改 | 不替代 init/migrate/doctor |
 | `refine` | 精炼知识库：triage 五问审阅 + compress 压缩抽象 | compress 产出的新条目走 short-term |
+| `sync-instructions` | 将现有 pipeline 的短路由写入 `CLAUDE.md` / `AGENTS.md` | 不生成项目总结，不内联完整 pipeline，不替代 `.pensieve/` |
 
 ## 常见重定向
 
@@ -20,3 +21,4 @@
 | "检查数据是否有问题" | `doctor` |
 | "把这次经验沉淀下来" | `self-improve` |
 | "整理/去重/压缩/精炼知识" | `refine` |
+| "把 pipeline 写进 CLAUDE.md/AGENTS.md" | `sync-instructions` |
